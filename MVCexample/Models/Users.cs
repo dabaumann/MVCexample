@@ -8,7 +8,7 @@ public class Users{
     public string SignOn;
     public string Password;
 
-    constructor(int OwnerID, string Name, string SignOn, string Password){
+    Users(int OwnerID, string Name, string SignOn, string Password){
         
         this.OwnerID = OwnerID;
         this.Name = Name;
