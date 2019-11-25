@@ -1,7 +1,7 @@
-
+using System;
 
 enum TransactionTypes{
-    
+
     Deposit,
     Withdraw
 }
@@ -13,7 +13,7 @@ public class Transactions{
     public int Amount;
     public DateTime Timestamp;
 
-    constructor(AccountID, TransactionType, Amount, Timestamp){
+    constructor(int AccountID, TransactionTypes TransactionType, int Amount, DateTime Timestamp){
         
         this.AccountID = AccountID;
         this.TransactionType = TransactionType;
