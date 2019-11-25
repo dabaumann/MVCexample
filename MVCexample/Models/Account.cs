@@ -1,5 +1,5 @@
 
-enum AccountTypes{
+public enum AccountTypes{
 
     Checking,
     Savings,
