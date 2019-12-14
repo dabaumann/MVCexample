@@ -1,13 +1,42 @@
-﻿@{
+﻿@model List<Account>
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
     <h1>MVC BANK</h1>
     <p class="lead">Banking simplified.</p>
-   <!-- <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> -->
+    <!-- <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> -->
 </div>
-<iframe src="SignIn.cshtml" height="200" width="300"></iframe>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4">
+            <input id="name" type="text" placeholder="Enter Name:" />
+        </div>
+        <div class="col-sm-4">
+            <input id="accountNumber" type="number" placeholder="Account Number:" />
+        </div>
+        <div class="col-sm-4">
+            <button id="enterButton" class="btn btn-success">New Account</button>
+        </div>
+    </div>
+    <div class="template" hidden>
+
+    </div>
+    <div id="accountList">
+        @foreach (Account account in Model)
+        {
+            <div class="row">
+                <div class="col-sm-6">
+                    <input type="number" value="@account.AccountNumber" disabled />
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
 <!--
 <div class="row">
     <div class="col-md-4">
@@ -31,3 +60,57 @@
     </div>
 </div>
 -->
+
+<script>
+    (function () {
+        let accountCreationURL = "/home/accountcreation"
+        document.getElementById('enterButton').addEventListener("click", enterButtonClick);
+
+        function enterButtonClick() {
+            let user = document.getElementById("name").value;
+            let account = parseInt(document.getElementById("accountNumber").value, 10);
+            httpRequest("POST", accountCreationURL, handleSuccess, handleFailure, { user: user, account: account });
+        }
+
+        function handleSuccess(response) {
+            document.getElementById("name").value = "";
+            document.getElementById("accountNumber").value = "";
+            document.getElementById("accountList").appendChild(createAccountHtml(response));
+        }
+
+        function handleFailure(error) {
+
+        }
+
+        function createAccountHtml(account) {
+            let divParent = document.createElement("div");
+            divParent.classList = "row col-sm-6";
+            let input = document.createElement("input");
+            input.type = "number";
+            input.disabled = true;
+            input.value = account;
+            divParent.appendChild(input);
+            return divParent;
+        }
+
+        function httpRequest(type, url, success, failure, params) {
+            var xmlHttp = new XMLHttpRequest();
+            // handle readystatechange event
+            xmlHttp.onreadystatechange = function () {
+                // check readyState property
+                if (xmlHttp.readyState === 4) { // 4 signifies DONE
+                    // req.status of 200 means success
+                    if (xmlHttp.status === 200) {
+                        success(xmlHttp.response);
+                    } else { // handle request failure
+                        failure(xmlHttp.response);
+                    }
+                }
+            }
+            xmlHttp.open(type, url, true); // true for asynchronous
+            xmlHttp.setRequestHeader('Content-Type', 'application/json');
+            xmlHttp.responseType = 'json'
+            xmlHttp.send(JSON.stringify(params));
+        }
+    })();
+</script>

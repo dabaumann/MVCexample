@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCexample.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,17 @@ namespace MVCexample.Controllers
 {
     public class HomeController : Controller
     {
+
+        public IDataService dataService;
+
+        public HomeController(IDataService _dataService)
+        {
+            dataService = _dataService;
+        }
+
         public ActionResult Index()
         {
-            return View();
+            return View(dataService.getAccounts());
         }
 
         public ActionResult About()
@@ -25,6 +34,16 @@ namespace MVCexample.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public JsonResult AccountCreation(string user, int account)
+        {
+            var model = new
+            {
+                success = dataService.CreateAccount(user, account),
+                account = account
+            };
+            return Json(model);
         }
     }
 }
